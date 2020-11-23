@@ -10,12 +10,15 @@ class Project:
 
     def __init__(self, list_attributes, relation):
         self.list_attributes = list_attributes
-        self.relation = relation
+        self.relation = relation.request_relation
 
         # The attribute to compared has to be in the relation
         for attribute in list_attributes:
-            if not attribute in relation.database_schema:
+            if not attribute in self.relation.database_schema:
                 raise Exception("Attribut is not in the relation")
+
+        # Perform the request
+        self.request_relation = self.perform()
 
     def perform(self):
         """ Perform the project request to get the relation """

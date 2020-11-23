@@ -8,11 +8,14 @@ class Select:
 
     def __init__(self, comparison, relation):
         self.comparison = comparison
-        self.relation = relation
+        self.relation = relation.request_relation
 
         # The attribute to compared has to be in the relation
-        if not comparison.name_attribute in relation.database_schema:
+        if not self.comparison.name_attribute in self.relation.database_schema:
             raise Exception("Attribut is not in the relation")
+
+        # Perform the request
+        self.request_relation = self.perform()
 
     def perform(self):
         """ Perform the select request to get the new relation """

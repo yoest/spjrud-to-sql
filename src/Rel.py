@@ -10,6 +10,9 @@ class Rel:
         self.name = name
         self.database_schema = database_schema
 
+        # Perform the request
+        self.request_relation = self.perform()
+
     def perform(self):
         """ Get the initial database schema """
-        return self.database_schema
+        return self
