@@ -7,3 +7,7 @@ class Cst:
 
     def __init__(self, value):
         self.value = value
+
+    def __str__(self):
+        """ Transform the request into a string """
+        return f"Cst('{self.value}')"

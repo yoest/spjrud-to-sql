@@ -12,6 +12,8 @@ class Rename:
     def __init__(self, attribute, new_name, relation):
         self.attribute = attribute
         self.new_name = new_name
+
+        self.initial_relation = relation
         self.relation = relation.request_relation
 
         # The attribute to compared has to be in the relation
@@ -27,3 +29,7 @@ class Rename:
         new_schema[self.new_name] = new_schema.pop(self.attribute)
 
         return Rel(self.relation.name, new_schema)
+
+    def __str__(self):
+        """ Transform the request into a string """
+        return f"Rename('{self.attribute}', '{self.new_name}', {self.initial_relation})"

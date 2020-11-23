@@ -10,6 +10,8 @@ class Project:
 
     def __init__(self, list_attributes, relation):
         self.list_attributes = list_attributes
+        
+        self.initial_relation = relation
         self.relation = relation.request_relation
 
         # The attribute to compared has to be in the relation
@@ -30,3 +32,7 @@ class Project:
                 new_schema[attribute] = self.relation.database_schema[attribute]
 
         return Rel(self.relation.name, new_schema)
+
+    def __str__(self):
+        """ Transform the request into a string """
+        return f"Project({self.list_attributes}, {self.initial_relation})"

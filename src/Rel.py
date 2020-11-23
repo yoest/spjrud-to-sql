@@ -16,3 +16,7 @@ class Rel:
     def perform(self):
         """ Get the initial database schema """
         return self
+
+    def __str__(self):
+        """ Transform the request into a string """
+        return f"Rel({self.name})"

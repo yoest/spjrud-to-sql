@@ -8,6 +8,8 @@ class Select:
 
     def __init__(self, comparison, relation):
         self.comparison = comparison
+
+        self.initial_relation = relation
         self.relation = relation.request_relation
 
         # The attribute to compared has to be in the relation
@@ -20,3 +22,7 @@ class Select:
     def perform(self):
         """ Perform the select request to get the new relation """
         return self.relation
+
+    def __str__(self):
+        """ Transform the request into a string """
+        return f"Select({self.comparison}, {self.initial_relation})"
