@@ -18,7 +18,50 @@ Coming soon...
 
 ## Documentation
 
-Coming soon...
+### Requêtes SPJRUD
+
+---
+
+> Select(comparaison, relation)
+
+- comparaison : condition de sélection (égalité, inégalité, ...)
+- relation : la relation sur laquelle effectué la selection
+
+---
+
+> Projection(liste_attributs, relation)
+
+- liste_attributs : tous les attributs que l'on veut récupérer avec la sélection
+- relation : la relation sur laquelle effectué la projection
+
+---
+
+> Rename(attribut, nouveau_nom, relation)
+
+- attribut : l'attribut à renommer
+- nouveau_nom : le nouveau nom à donner à l'attribut
+- relation : la relation sur laquelle effectué le renommage
+
+---
+
+> Join(relation_1, relation_2)
+
+- relation_1 : la première relation sur laquelle effectué la jointure
+- relation_2 : la seconde relation sur laquelle effectué la jointure
+
+---
+
+> Union(relation_1, relation_2)
+
+- relation_1 : la première relation sur laquelle effectué la jointure
+- relation_2 : la seconde relation sur laquelle effectué la jointure
+
+---
+
+> Diff(relation_1, relation_2)
+
+- relation_1 : la première relation sur laquelle effectué la jointure
+- relation_2 : la seconde relation sur laquelle effectué la jointure
 
 ## Remarques éventuelles
 
