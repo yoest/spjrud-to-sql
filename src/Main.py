@@ -8,24 +8,32 @@ from Join import *
 from Union import *
 from Diff import *
 
+def testRelation(relation):
+    print(f"[Request]  {relation}")
+    print(f"[Schema]  {relation.database_schema}")
+
 if __name__ == "__main__":
-    rel1 = Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'NUMERIC'})
-    rel1bis = Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'NUMERIC'})
-    rel2 = Rel('Lands', {'name':'TEXT', 'capital':'TEXT', 'PIB':'NUMERIC'})
+    relations = [
+        Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'NUMERIC'}),
+        Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'NUMERIC'}), 
+        Rel('Lands', {'name':'TEXT', 'capital':'TEXT', 'PIB':'NUMERIC'})
+    ]
 
-    """
-    eq = Eq('country', Cst('Mali'))
+    # eq = Eq('name', 'mali')
+    # select = Select(eq, relations[0])
+    # testRelation(select)
+    
+    # crename = Rename('name', 'nom', relations[0])
+    # testRelation(rename)
 
-    select = Select(eq, rel)
+    # join = Join(relations[0], relations[1])
+    # testRelation(join)
 
-    project = Project(['name', 'population'], select)
+    # union = Union(relations[0], relations[1])
+    # testRelation(union)
 
-    rename = Rename('population', 'peoples', project)
-    print(rename)
+    # project = Project(['name', 'population'], relations[0])
+    # testRelation(project)
 
-    join = Join(rel1, rel2)
-    print(join.request_relation.database_schema)
-    """
-
-    diff = Diff(rel1, rel1bis)
-    print(diff.request_relation.database_schema)
+    # diff = Diff(relations[0], relations[1])
+    # testRelation(diff)

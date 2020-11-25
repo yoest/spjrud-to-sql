@@ -1,6 +1,6 @@
 from Rel import *
 
-class Diff:
+class Diff(Rel):
     """ Represent a DIFFERENCE request (SPJRUD)
 
     Attributes:
@@ -9,13 +9,18 @@ class Diff:
     """
 
     def __init__(self, first_relation, second_relation):
-        self.initial_first_relation = first_relation
-        self.first_relation = first_relation.request_relation
+        self.first_relation = first_relation
+        self.second_relation = second_relation
+        
+        # Perform the request
+        super().__init__(self.first_relation.name + "_" + self.second_relation.name, self.perform())
 
-        self.initial_second_relation = second_relation
-        self.second_relation = second_relation.request_relation
+    def perform(self):
+        """ Perform the difference request to get the new schema """
+        return self.first_relation.database_schema
 
-        # Both relations has to have the same attributes
+    def checkRequest(self):
+        """ Both relations has to have the same attributes """
         hasSameAttributes = True
         for attribute in self.first_relation.database_schema:
             if not attribute in self.second_relation.database_schema:
@@ -26,13 +31,6 @@ class Diff:
         if not hasSameAttributes or not hasSameSize:
             raise Exception("The two relations haven't the exact same attributs")
 
-        # Perform the request
-        self.request_relation = self.perform()
-
-    def perform(self):
-        """ Perform the difference request to get the new relation """
-        return Rel(self.first_relation.name + "_" + self.second_relation.name, self.first_relation.database_schema)
-
     def __str__(self):
         """ Transform the request into a string """
-        return f"Diff({self.initial_first_relation}, {self.initial_second_relation})"
+        return f"Diff({self.first_relation}, {self.second_relation})"

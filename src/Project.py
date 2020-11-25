@@ -1,6 +1,6 @@
 from Rel import *
 
-class Project:
+class Project(Rel):
     """ Represent a PROJECT request (SPJRUD)
 
     Attributes:
@@ -10,20 +10,13 @@ class Project:
 
     def __init__(self, list_attributes, relation):
         self.list_attributes = list_attributes
+        self.relation = relation
         
-        self.initial_relation = relation
-        self.relation = relation.request_relation
-
-        # The attribute to compared has to be in the relation
-        for attribute in list_attributes:
-            if not attribute in self.relation.database_schema:
-                raise Exception("Attribut is not in the relation")
-
         # Perform the request
-        self.request_relation = self.perform()
+        super().__init__(self.relation.name, self.perform())
 
     def perform(self):
-        """ Perform the project request to get the relation """
+        """ Perform the project request to get the schema """
         new_schema = {}
 
         # Select only some attributes in the database schema of the initial relation
@@ -31,8 +24,14 @@ class Project:
             if attribute in self.list_attributes:
                 new_schema[attribute] = self.relation.database_schema[attribute]
 
-        return Rel(self.relation.name, new_schema)
+        return new_schema
+
+    def checkRequest(self):
+        """ all attributes to compared has to be in the relation """
+        for attribute in self.list_attributes:
+            if not attribute in self.relation.database_schema:
+                raise Exception("Attribut is not in the relation")
 
     def __str__(self):
         """ Transform the request into a string """
-        return f"Project({self.list_attributes}, {self.initial_relation})"
+        return f"Project({self.list_attributes}, {self.relation})"

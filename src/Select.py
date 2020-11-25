@@ -1,4 +1,6 @@
-class Select:
+from Rel import *
+
+class Select(Rel):
     """ Represent a SELECT request (SPJRUD)
 
     Attributes:
@@ -8,21 +10,20 @@ class Select:
 
     def __init__(self, comparison, relation):
         self.comparison = comparison
+        self.relation = relation
 
-        self.initial_relation = relation
-        self.relation = relation.request_relation
+        # Perform the request
+        super().__init__(self.relation.name)
 
-        # The attribute to compared has to be in the relation
+    def perform(self):
+        """ Perform the select request to get the schema """
+        return self.relation.database_schema
+
+    def checkRequest(self):
+        """ The attribute to compared has to be in the relation """
         if not self.comparison.name_attribute in self.relation.database_schema:
             raise Exception("Attribut is not in the relation")
 
-        # Perform the request
-        self.request_relation = self.perform()
-
-    def perform(self):
-        """ Perform the select request to get the new relation """
-        return self.relation
-
     def __str__(self):
         """ Transform the request into a string """
-        return f"Select({self.comparison}, {self.initial_relation})"
+        return f"Select({self.comparison}, {self.relation})"

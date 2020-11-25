@@ -12,4 +12,4 @@ class Eq:
 
     def __str__(self):
         """ Transform the request into a string """
-        return f"Eq('{self.name_attribute}', {self.value})"
+        return f"Eq('{self.name_attribute}', '{self.value}')"
