@@ -11,7 +11,7 @@ class Project(Rel):
     def __init__(self, list_attributes, relation):
         self.list_attributes = list_attributes
         self.relation = relation
-        
+
         # Perform the request
         super().__init__(self.relation.name, self.perform())
 
@@ -30,7 +30,9 @@ class Project(Rel):
         """ all attributes to compared has to be in the relation """
         for attribute in self.list_attributes:
             if not attribute in self.relation.database_schema:
-                raise Exception("Attribut is not in the relation")
+                error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{attribute}'"
+
+                raise ValueError(error_request)
 
     def __str__(self):
         """ Transform the request into a string """

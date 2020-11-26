@@ -29,7 +29,9 @@ class Union(Rel):
         hasSameSize = len(self.first_relation.database_schema) == len(self.second_relation.database_schema)
 
         if not hasSameAttributes or not hasSameSize:
-            raise Exception("The two relations haven't the exact same attributs")
+            error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.first_relation}\nwhich is\n\t{self.first_relation.database_schema}\nis not the same as the schema of\n\t{self.second_relation}\nwhich is\n\t{self.second_relation.database_schema}"
+
+            raise ValueError(error_request)
 
     def __str__(self):
         """ Transform the request into a string """
