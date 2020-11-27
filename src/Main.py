@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # select = Select(eq, relations[0])
     # testRelation(select)
     
-    # crename = Rename('name', 'nom', relations[0])
+    # rename = Rename('name', 'nom', relations[0])
     # testRelation(rename)
 
     # join = Join(relations[0], relations[1])
