@@ -8,6 +8,8 @@ from Join import *
 from Union import *
 from Diff import *
 
+from SqlLiteDatabase import *
+
 def testRelation(relation):
     print(f"[Request]  {relation}")
     print(f"[Schema]  {relation.database_schema}")
@@ -37,3 +39,5 @@ if __name__ == "__main__":
 
     # diff = Diff(relations[0], relations[1])
     # testRelation(diff)
+
+    database = SqlLiteDatabase()
