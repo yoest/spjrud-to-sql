@@ -44,8 +44,8 @@ class Project(Rel):
             if(not (x == len(self.list_attributes) - 1)):
                 request += ", "
 
-        request += " FROM " + self.name + ";"
-        self.database.executeRequest(request)
+        request += " FROM (" + self.relation.execute() + ")"
+        return request
 
     def __str__(self):
         """ Transform the request into a string """

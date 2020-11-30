@@ -44,4 +44,7 @@ if __name__ == "__main__":
     # rel.database.exampleAddValue()
 
     project = Project(['name', 'country'], rel)
-    project.execute()
+    project1 = Project(['country'], project)
+
+    project1.database.executeRequest(project1.execute())
+    

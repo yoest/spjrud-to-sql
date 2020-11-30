@@ -29,6 +29,10 @@ class Rel:
         """ Check some conditions so that the request is valid """
         pass
 
+    def execute(self):
+        """ Execute the request """
+        return self.name
+
     def __str__(self):
         """ Transform the request into a string """
         return f"Rel({self.name})"
