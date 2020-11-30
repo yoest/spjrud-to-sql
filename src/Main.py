@@ -15,11 +15,11 @@ def testRelation(relation):
     print(f"[Schema]  {relation.database_schema}")
 
 if __name__ == "__main__":
-    relations = [
-        Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'NUMERIC'}),
-        Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'NUMERIC'}), 
-        Rel('Lands', {'name':'TEXT', 'capital':'TEXT', 'PIB':'NUMERIC'})
-    ]
+    # relations = [
+    #     Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'INTEGER'}),
+    #     Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'INTEGER'}), 
+    #     Rel('Lands', {'name':'TEXT', 'capital':'TEXT', 'PIB':'INTEGER'})
+    # ]
 
     # eq = Eq('name', 'mali')
     # select = Select(eq, relations[0])
@@ -40,4 +40,6 @@ if __name__ == "__main__":
     # diff = Diff(relations[0], relations[1])
     # testRelation(diff)
 
-    database = SqlLiteDatabase()
+    rel = Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'INTEGER'})
+    project = Project(['name', 'population'], rel)
+    testRelation(project)

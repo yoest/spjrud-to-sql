@@ -1,3 +1,5 @@
+from SqlLiteDatabase import *
+
 class Rel:
     """ This class represents a relation 
 
@@ -8,18 +10,20 @@ class Rel:
 
     def __init__(self, name, database_schema = {}):
         self.checkRequest()
-
-        # Get the schema in a python dict or by the sql database (--TO-DO--)
-        if not database_schema:
-            self.database_schema = self.perform()
-        else:
-            self.database_schema = database_schema
-
         self.name = name
 
+        self.database = SqlLiteDatabase('database.db', name)
+
+        # Get the schema in a python dict or by the sql database (--TO-DO--)
+        if database_schema:
+            self.database_schema = self.database.createTable(database_schema)
+
+        self.database_schema = self.perform()
+
+
     def perform(self):
-        """ Get the initial database schema """
-        return self.database_schema
+        """ Get the database schema in the database """ 
+        return self.database.getSchema(self.name)
 
     def checkRequest(self):
         """ Check some conditions so that the request is valid """
