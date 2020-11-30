@@ -34,6 +34,19 @@ class Project(Rel):
 
                 raise ValueError(error_request)
 
+    def execute(self):
+        """ Execute the request """
+        request = "SELECT "
+
+        for x, attribute in enumerate(self.list_attributes):
+            request += attribute
+
+            if(not (x == len(self.list_attributes) - 1)):
+                request += ", "
+
+        request += " FROM " + self.name + ";"
+        self.database.executeRequest(request)
+
     def __str__(self):
         """ Transform the request into a string """
         return f"Project({self.list_attributes}, {self.relation})"

@@ -41,5 +41,7 @@ if __name__ == "__main__":
     # testRelation(diff)
 
     rel = Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'INTEGER'})
-    project = Project(['name', 'population'], rel)
-    testRelation(project)
+    # rel.database.exampleAddValue()
+
+    project = Project(['name', 'country'], rel)
+    project.execute()

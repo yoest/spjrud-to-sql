@@ -11,6 +11,11 @@ class SqlLiteDatabase:
         self.path = path
         self.rel_name = rel_name
 
+        # connexion = sqlite3.connect(self.path)
+        # connexion.execute("DROP TABLE " + self.rel_name + ";").fetchall()
+        # connexion.commit()
+        # connexion.close()
+
     def getSchema(self, rel_name):
         """ Get the schema of the relation """
         result = {}
@@ -32,20 +37,45 @@ class SqlLiteDatabase:
         """ Create a table with the database schema : [database_schema] """
         connexion = sqlite3.connect(self.path)
 
-        # drop the table if it already existed
-        connexion.execute("DROP table IF EXISTS " + self.rel_name);
+        # check if the table already exist
+        exist = connexion.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='" + self.rel_name + "'").fetchone()
 
-        request_schema = "("
-        for x, value in enumerate(database_schema):
-            request_schema += value + ' ' + database_schema[value]
+        # if exist is 1, then the table exists
+        if not exist[0] == 1 : 
+            request_schema = "("
+            for x, value in enumerate(database_schema):
+                request_schema += value + ' ' + database_schema[value]
 
-            if(not (x == len(database_schema) - 1)):
-                request_schema += ", "
+                if(not (x == len(database_schema) - 1)):
+                    request_schema += ", "
 
-        request_schema += ")"
+            request_schema += ")"
 
-        # Create table
-        connexion.execute("CREATE TABLE " + self.rel_name + request_schema + ";")
+            # Create table
+            connexion.execute("CREATE TABLE " + self.rel_name + request_schema + ";")
+
+            connexion.commit()
+            connexion.close()
+
+    def executeRequest(self, request):
+        """ execute the [request] """
+        connexion = sqlite3.connect(self.path)
+
+        result = connexion.execute(request)
+        print(result.fetchall())
+
+        connexion.commit()
+        connexion.close()
+
+
+    # -- Example value --
+    def exampleAddValue(self):
+        connexion = sqlite3.connect(self.path)
+
+        # Insert into table
+        connexion.execute("INSERT INTO " + self.rel_name + "(name,country,population) VALUES('mons','belgium',50000)")
+        connexion.execute("INSERT INTO " + self.rel_name + "(name,country,population) VALUES('new york','usa',65658520)")
+        connexion.execute("INSERT INTO " + self.rel_name + "(name,country,population) VALUES('madrid','spain',266465)")
 
         connexion.commit()
         connexion.close()
