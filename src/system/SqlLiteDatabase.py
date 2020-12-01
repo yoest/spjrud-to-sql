@@ -42,6 +42,7 @@ class SqlLiteDatabase:
 
         # if exist is 1, then the table exists
         if not exist[0] == 1 : 
+            print("not exist")
             request_schema = "("
             for x, value in enumerate(database_schema):
                 request_schema += value + ' ' + database_schema[value]
@@ -54,8 +55,8 @@ class SqlLiteDatabase:
             # Create table
             connexion.execute("CREATE TABLE " + self.rel_name + request_schema + ";")
 
-            connexion.commit()
-            connexion.close()
+        connexion.commit()
+        connexion.close()
 
     def executeRequest(self, request):
         """ execute the [request] """
@@ -67,15 +68,40 @@ class SqlLiteDatabase:
         connexion.commit()
         connexion.close()
 
-
-    # -- Example value --
-    def exampleAddValue(self):
+    def showTables(self):
+        """ Show names of tables in the database """
         connexion = sqlite3.connect(self.path)
 
-        # Insert into table
-        connexion.execute("INSERT INTO " + self.rel_name + "(name,country,population) VALUES('mons','belgium',50000)")
-        connexion.execute("INSERT INTO " + self.rel_name + "(name,country,population) VALUES('new york','usa',65658520)")
-        connexion.execute("INSERT INTO " + self.rel_name + "(name,country,population) VALUES('madrid','spain',266465)")
+        result = connexion.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
+
+        connexion.commit()
+        connexion.close()
+        return result
+
+    def dropTable(self, table_name):
+        """ Drop the table named [table_name] """
+        connexion = sqlite3.connect(self.path)
+
+        connexion.execute("DROP table IF EXISTS " + table_name + ";")
+
+        connexion.commit()
+        connexion.close()
+
+    def createExampleTable(self):
+        """ Create two table for example """
+        connexion = sqlite3.connect(self.path)
+
+        # Table countries
+        connexion.execute("CREATE TABLE countries (name TEXT, country TEXT, population INTEGER);")
+        connexion.execute("INSERT INTO countries (name,country,population) VALUES('mons','belgium',50000);")
+        connexion.execute("INSERT INTO countries (name,country,population) VALUES('new york','usa',65658520);")
+        connexion.execute("INSERT INTO countries (name,country,population) VALUES('madrid','spain',266465);")
+
+        # Table lands
+        connexion.execute("CREATE TABLE lands (name TEXT, country TEXT, money INTEGER);")
+        connexion.execute("INSERT INTO lands (name,country,money) VALUES('mons','belgium',456192346);")
+        connexion.execute("INSERT INTO lands (name,country,money) VALUES('new york','usa',451349294613);")
+        connexion.execute("INSERT INTO lands (name,country,money) VALUES('madrid','spain',23164982846);")
 
         connexion.commit()
         connexion.close()

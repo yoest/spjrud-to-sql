@@ -1,7 +1,7 @@
-from Rel import *
+from relations.Rel import *
 
-class Diff(Rel):
-    """ Represent a DIFFERENCE request (SPJRUD)
+class Union(Rel):
+    """ Represent a UNION request (SPJRUD)
 
     Attributes:
         first_relation     the first relation on which perform the request
@@ -11,12 +11,12 @@ class Diff(Rel):
     def __init__(self, first_relation, second_relation):
         self.first_relation = first_relation
         self.second_relation = second_relation
-        
+
         # Perform the request
         super().__init__(self.first_relation.name + "_" + self.second_relation.name, self.perform())
 
     def perform(self):
-        """ Perform the difference request to get the new schema """
+        """ Perform the union request to get the new schema """
         return self.first_relation.database_schema
 
     def checkRequest(self):
@@ -35,4 +35,4 @@ class Diff(Rel):
 
     def __str__(self):
         """ Transform the request into a string """
-        return f"Diff({self.first_relation}, {self.second_relation})"
+        return f"Union({self.first_relation}, {self.second_relation})"

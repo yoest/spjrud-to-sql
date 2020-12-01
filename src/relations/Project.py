@@ -1,4 +1,4 @@
-from Rel import *
+from relations.Rel import *
 
 class Project(Rel):
     """ Represent a PROJECT request (SPJRUD)

@@ -1,4 +1,4 @@
-from SqlLiteDatabase import *
+from system.SqlLiteDatabase import *
 
 class Rel:
     """ This class represents a relation 

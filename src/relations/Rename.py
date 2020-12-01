@@ -1,4 +1,4 @@
-from Rel import *
+from relations.Rel import *
 
 class Rename(Rel):
     """ Represent a RENAME request (SPJRUD)

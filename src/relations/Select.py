@@ -1,4 +1,4 @@
-from Rel import *
+from relations.Rel import *
 
 class Select(Rel):
     """ Represent a SELECT request (SPJRUD)
@@ -25,6 +25,14 @@ class Select(Rel):
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.comparison.name_attribute}'"
 
             raise ValueError(error_request)
+
+    def execute(self):
+        """ Execute the request """
+        request = "SELECT *"
+        request += " FROM (" + self.relation.execute() + ")"
+        request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + "'" + str(self.comparison.value) + "'"
+
+        return request
 
     def __str__(self):
         """ Transform the request into a string """

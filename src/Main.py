@@ -1,14 +1,17 @@
-from Rel import *
-from Eq import *
-from Cst import *
-from Select import *
-from Project import *
-from Rename import *
-from Join import *
-from Union import *
-from Diff import *
+from relations.Rel import *
+from relations.Cst import *
+from relations.Select import *
+from relations.Project import *
+from relations.Rename import *
+from relations.Join import *
+from relations.Union import *
+from relations.Diff import *
 
-from SqlLiteDatabase import *
+from comparison.Eq import *
+from comparison.Gt import *
+from comparison.Lt import *
+
+from system.SqlLiteDatabase import *
 
 def testRelation(relation):
     print(f"[Request]  {relation}")
@@ -40,11 +43,15 @@ if __name__ == "__main__":
     # diff = Diff(relations[0], relations[1])
     # testRelation(diff)
 
-    rel = Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'INTEGER'})
-    # rel.database.exampleAddValue()
+    rel = Rel('countries')
 
-    project = Project(['name', 'country'], rel)
-    project1 = Project(['country'], project)
+    select = Select(Lt('population', 65658520), rel)
+    project = Project(['name', 'country'], select)
 
-    project1.database.executeRequest(project1.execute())
+    project.database.executeRequest(project.execute())
+
+    # db = SqlLiteDatabase('database.db', '')
+    # print(db.showTables())
+    # db.createExampleTable()
+    # print(db.showTables())
     

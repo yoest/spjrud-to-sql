@@ -1,4 +1,4 @@
-from Rel import *
+from relations.Rel import *
 
 class Join(Rel):
     """ Represent a JOIN request (SPJRUD)
