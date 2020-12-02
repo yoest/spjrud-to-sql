@@ -13,7 +13,7 @@ class Join(Rel):
         self.second_relation = second_relation
 
         # Perform the request
-        super().__init__(self.first_relation.name + self.second_relation.name + "join", self.perform())
+        super().__init__(self.first_relation.name + self.second_relation.name + "join", self.perform(), False)
 
     def perform(self):
         """ Perform the join request to get the new schema """

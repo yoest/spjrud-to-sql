@@ -13,7 +13,7 @@ class Union(Rel):
         self.second_relation = second_relation
 
         # Perform the request
-        super().__init__(self.first_relation.name + self.second_relation.name + "uni", self.perform())
+        super().__init__(self.first_relation.name + self.second_relation.name + "uni", self.perform(), False)
 
     def perform(self):
         """ Perform the union request to get the new schema """

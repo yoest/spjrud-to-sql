@@ -13,7 +13,7 @@ class Project(Rel):
         self.relation = relation
 
         # Perform the request
-        super().__init__(self.relation.name + "proj", self.perform())
+        super().__init__(self.relation.name + "_proj", self.perform(), False)
 
     def perform(self):
         """ Perform the project request to get the schema """
@@ -34,7 +34,7 @@ class Project(Rel):
 
                 raise ValueError(error_request)
 
-    def execute(self):
+    def execute(self, is_last_query = True):
         """ Execute the request """
         request = "SELECT "
 
@@ -44,9 +44,11 @@ class Project(Rel):
             if(not (x == len(self.list_attributes) - 1)):
                 request += ", "
 
-        request += " FROM (" + self.relation.execute() + ")"
-        print(request)
-        return request
+        request += " FROM (" + self.relation.execute(False) + ")"
+
+        self.database.executeRequest(self.name, request)
+        
+        return super().editTableExecute(is_last_query)
 
     def __str__(self):
         """ Transform the request into a string """

@@ -16,7 +16,7 @@ class Rename(Rel):
         self.relation = relation
         
         # Perform the request
-        super().__init__(self.relation.name + "ren")
+        super().__init__(self.relation.name + "ren", is_final_relation=False)
 
     def perform(self):
         """ Perform the rename request to get the new schema """

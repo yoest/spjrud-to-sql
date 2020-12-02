@@ -13,7 +13,7 @@ class Diff(Rel):
         self.second_relation = second_relation
         
         # Perform the request
-        super().__init__(self.first_relation.name + self.second_relation.name + "diff", self.perform())
+        super().__init__(self.first_relation.name + self.second_relation.name + "diff", self.perform(), False)
 
     def perform(self):
         """ Perform the difference request to get the new schema """

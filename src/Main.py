@@ -45,9 +45,10 @@ if __name__ == "__main__":
 
     rel = Rel('countries')
 
-    select = Select(Eq('population', 65658520), rel)
-    select1 = Select(Eq('population', 65658520), select)
-    result = select1.execute()
+    project = Project(['name', 'population'], rel)
+    select = Select(Eq('population', 65658520), project)
+
+    result = select.execute()
 
     db = SqlLiteDatabase('database.db', '')
     print(db.showTables())
@@ -60,9 +61,9 @@ if __name__ == "__main__":
     # project1.database.executeRequest(project1.execute())
     #print(rel.database_schema)
 
+    # db = SqlLiteDatabase('database.db', '')
     # print(db.showTables())
-    # db.dropTable('countries_sel')
-    # db.dropTable('countries_sel_sel')
+    # db.dropTable('countries_sel_proj')
     # print(db.showTables())
 
     # print(db.showTables())

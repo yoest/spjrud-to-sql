@@ -13,7 +13,7 @@ class Select(Rel):
         self.relation = relation
 
         # Perform the request
-        super().__init__(self.relation.name + "_sel")
+        super().__init__(self.relation.name + "_sel", is_final_relation=False)
 
     def perform(self):
         """ Perform the select request to get the schema """
@@ -34,18 +34,7 @@ class Select(Rel):
 
         self.database.executeRequest(self.name, request)
 
-        # Delete the previous table but not if it's the original relation
-        if('_' in self.relation.name):
-            self.database.dropTable(self.relation.name)
-
-        if(is_last_query):
-            result = self.database.showTable(self.name)
-
-            # Delete the last table but only if it's the last recursive query
-            self.database.dropTable(self.name)
-            return result
-        
-        return self.name
+        return super().editTableExecute(is_last_query)
 
     def __str__(self):
         """ Transform the request into a string """

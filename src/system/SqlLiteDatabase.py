@@ -16,9 +16,10 @@ class SqlLiteDatabase:
         # connexion.commit()
         # connexion.close()
 
-    def getSchema(self, rel_name):
+    def getSchema(self):
         """ Get the schema of the relation """
         result = {}
+        self.exist()
 
         connexion = sqlite3.connect(self.path)
         request = connexion.execute("PRAGMA table_info('" + self.rel_name + "')").fetchall()
@@ -33,7 +34,7 @@ class SqlLiteDatabase:
 
         return result
 
-    def createTable(self, database_schema):
+    def exist(self):
         """ Create a table with the database schema : [database_schema] """
         connexion = sqlite3.connect(self.path)
 
@@ -42,17 +43,20 @@ class SqlLiteDatabase:
 
         # if exist is 1, then the table exists
         if not exist[0] == 1 : 
-            request_schema = "("
-            for x, value in enumerate(database_schema):
-                request_schema += value + ' ' + database_schema[value]
+            raise Exception("Table '" + self.rel_name + "' doesn't exist.")
 
-                if(not (x == len(database_schema) - 1)):
-                    request_schema += ", "
+        connexion.commit()
+        connexion.close()
 
-            request_schema += ")"
+    def checkDatabase(self, database_schema):
+        """ Create a table with the database schema : [database_schema] """
+        self.exist()
 
-            # Create table
-            connexion.execute("CREATE TABLE " + self.rel_name + request_schema + ";")
+        connexion = sqlite3.connect(self.path)
+
+        # Not the same relation
+        if not (database_schema == self.getSchema()):
+            raise Exception("Table '" + self.rel_name + "' is not the same than the one in the database.")
 
         connexion.commit()
         connexion.close()

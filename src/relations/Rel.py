@@ -6,24 +6,27 @@ class Rel:
     Attributes:
         name                name of the relation
         database_schema     schema of the relation (Ex : {'name':TEXT, 'population':NUMERIC})
+        is_final_relation   always True in case of the initial relation (not if queries)
     """
 
-    def __init__(self, name, database_schema = {}):
+    def __init__(self, name, database_schema = {}, is_final_relation = True):
         self.checkRequest()
         self.name = name
+        self.is_final_relation = is_final_relation
 
         self.database = SqlLiteDatabase('database.db', name)
 
-        # Get the schema in a python dict or by the sql database (--TO-DO--)
+        # Get the schema in a python dict or by the sql database
         if database_schema:
-            self.database_schema = self.database.createTable(database_schema)
-
-        self.database_schema = self.perform()
+            # self.database.checkDatabase(database_schema)
+            self.database_schema = database_schema
+        else:
+            self.database_schema = self.perform()
 
 
     def perform(self):
         """ Get the database schema in the database """ 
-        return self.database.getSchema(self.name)
+        return self.database.getSchema()
 
     def checkRequest(self):
         """ Check some conditions so that the request is valid """
@@ -31,6 +34,20 @@ class Rel:
 
     def execute(self, is_last_query = True):
         """ Execute the request """
+        return self.name
+
+    def editTableExecute(self, is_last_query):
+        # Delete the previous table but not if it's the original relation
+        if not self.relation.is_final_relation:
+            self.database.dropTable(self.relation.name)
+
+        # Get result table and delete the last table but only if it's the last recursive query
+        if is_last_query:
+            result = self.database.showTable(self.name)
+
+            self.database.dropTable(self.name)
+            return result
+        
         return self.name
 
     def __str__(self):
