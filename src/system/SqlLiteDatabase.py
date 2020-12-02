@@ -42,7 +42,6 @@ class SqlLiteDatabase:
 
         # if exist is 1, then the table exists
         if not exist[0] == 1 : 
-            print("not exist")
             request_schema = "("
             for x, value in enumerate(database_schema):
                 request_schema += value + ' ' + database_schema[value]
@@ -58,12 +57,15 @@ class SqlLiteDatabase:
         connexion.commit()
         connexion.close()
 
-    def executeRequest(self, request):
+    def executeRequest(self, table_name, request):
         """ execute the [request] """
         connexion = sqlite3.connect(self.path)
 
-        result = connexion.execute(request)
-        print(result.fetchall())
+        # Create a new table from the request
+        # We don't use only the request because the query 'RENAME' create obligatorily
+        # a new table, and so we have to create a table for each request to make the
+        # algorithm recursive
+        result = connexion.execute("CREATE TABLE " + table_name + " AS " + request)
 
         connexion.commit()
         connexion.close()
@@ -73,6 +75,16 @@ class SqlLiteDatabase:
         connexion = sqlite3.connect(self.path)
 
         result = connexion.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
+
+        connexion.commit()
+        connexion.close()
+        return result
+
+    def showTable(self, table_name):
+        """ Show one specific table """
+        connexion = sqlite3.connect(self.path)
+
+        result = connexion.execute("SELECT * FROM " + table_name + ";").fetchall()
 
         connexion.commit()
         connexion.close()

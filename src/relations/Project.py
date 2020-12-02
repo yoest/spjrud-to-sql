@@ -13,7 +13,7 @@ class Project(Rel):
         self.relation = relation
 
         # Perform the request
-        super().__init__(self.relation.name, self.perform())
+        super().__init__(self.relation.name + "proj", self.perform())
 
     def perform(self):
         """ Perform the project request to get the schema """
@@ -45,6 +45,7 @@ class Project(Rel):
                 request += ", "
 
         request += " FROM (" + self.relation.execute() + ")"
+        print(request)
         return request
 
     def __str__(self):

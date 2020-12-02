@@ -13,7 +13,7 @@ class Select(Rel):
         self.relation = relation
 
         # Perform the request
-        super().__init__(self.relation.name)
+        super().__init__(self.relation.name + "_sel")
 
     def perform(self):
         """ Perform the select request to get the schema """
@@ -26,13 +26,26 @@ class Select(Rel):
 
             raise ValueError(error_request)
 
-    def execute(self):
+    def execute(self, is_last_query = True):
         """ Execute the request """
         request = "SELECT *"
-        request += " FROM (" + self.relation.execute() + ")"
+        request += " FROM (" + self.relation.execute(False) + ")"
         request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + "'" + str(self.comparison.value) + "'"
 
-        return request
+        self.database.executeRequest(self.name, request)
+
+        # Delete the previous table but not if it's the original relation
+        if('_' in self.relation.name):
+            self.database.dropTable(self.relation.name)
+
+        if(is_last_query):
+            result = self.database.showTable(self.name)
+
+            # Delete the last table but only if it's the last recursive query
+            self.database.dropTable(self.name)
+            return result
+        
+        return self.name
 
     def __str__(self):
         """ Transform the request into a string """

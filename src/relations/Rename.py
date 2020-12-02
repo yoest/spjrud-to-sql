@@ -16,7 +16,7 @@ class Rename(Rel):
         self.relation = relation
         
         # Perform the request
-        super().__init__(self.relation.name)
+        super().__init__(self.relation.name + "ren")
 
     def perform(self):
         """ Perform the rename request to get the new schema """
@@ -31,6 +31,14 @@ class Rename(Rel):
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.attribute}'"
 
             raise ValueError(error_request)
+
+    def execute(self):
+        """ Execute the request """
+        request = "ALTER TABLE (" + self.relation.execute() + ")"
+        request += " RENAME COLUMN " +  self.attribute
+        request += " TO " +  self.new_name
+
+        return request
 
     def __str__(self):
         """ Transform the request into a string """

@@ -29,7 +29,7 @@ class Rel:
         """ Check some conditions so that the request is valid """
         pass
 
-    def execute(self):
+    def execute(self, is_last_query = True):
         """ Execute the request """
         return self.name
 
