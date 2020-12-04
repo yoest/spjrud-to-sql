@@ -35,7 +35,7 @@ class SqlLiteDatabase:
         return result
 
     def exist(self):
-        """ Create a table with the database schema : [database_schema] """
+        """ Check if the table exist """
         connexion = sqlite3.connect(self.path)
 
         # check if the table already exist
@@ -61,15 +61,23 @@ class SqlLiteDatabase:
         connexion.commit()
         connexion.close()
 
-    def executeRequest(self, table_name, request):
-        """ execute the [request] """
+    def executeRequest(self, table_name, request, old_name=""):
+        """ execute the [request] which create a table named [table_name].
+
+            [old] contains the name of the table on which we execute the request
+            only if we need to edit this table (example: rename request).
+        """
         connexion = sqlite3.connect(self.path)
 
         # Create a new table from the request
         # We don't use only the request because the query 'RENAME' create obligatorily
         # a new table, and so we have to create a table for each request to make the
         # algorithm recursive
-        result = connexion.execute("CREATE TABLE " + table_name + " AS " + request)
+        if not old_name:
+            connexion.execute("CREATE TABLE " + table_name + " AS " + request)
+        else:
+            connexion.execute("CREATE TABLE " + table_name + " AS SELECT * FROM " + old_name + ";")
+            connexion.execute(request)
 
         connexion.commit()
         connexion.close()

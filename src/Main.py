@@ -45,17 +45,20 @@ if __name__ == "__main__":
 
     rel = Rel('countries')
 
-    project = Project(['name', 'population'], rel)
-    select = Select(Eq('population', 65658520), project)
+    select = Select(Eq('population', 65658520), rel)
 
-    result = select.execute()
+    rename = Rename('name', 'nom', select)
+    rename1 = Rename('population', 'populace', rename)
+
+    project = Project(['nom', 'populace'], rename1)
+
+    result = project.execute()
 
     db = SqlLiteDatabase('database.db', '')
     print(db.showTables())
     print(result)
 
     # project = Project(['name', 'country'], rel)
-    # rename = Rename('name', 'nom', project)
     # project1 = Project(['nom'], rename)
 
     # project1.database.executeRequest(project1.execute())

@@ -16,7 +16,7 @@ class Rename(Rel):
         self.relation = relation
         
         # Perform the request
-        super().__init__(self.relation.name + "ren", is_final_relation=False)
+        super().__init__(self.relation.name + "_ren", is_final_relation=False)
 
     def perform(self):
         """ Perform the rename request to get the new schema """
@@ -32,13 +32,19 @@ class Rename(Rel):
 
             raise ValueError(error_request)
 
-    def execute(self):
+    def execute(self, is_last_query = True):
         """ Execute the request """
-        request = "ALTER TABLE (" + self.relation.execute() + ")"
+        self.relation.execute(False)
+
+        request = "ALTER TABLE " + self.name
         request += " RENAME COLUMN " +  self.attribute
         request += " TO " +  self.new_name
 
-        return request
+        self.database.executeRequest(self.name, request, self.relation.name)
+
+        print(self.database.getSchema())
+        
+        return super().editTableExecute(is_last_query)
 
     def __str__(self):
         """ Transform the request into a string """
