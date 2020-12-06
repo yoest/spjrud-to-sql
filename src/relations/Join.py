@@ -13,7 +13,7 @@ class Join(Rel):
         self.second_relation = second_relation
 
         # Perform the request
-        super().__init__(self.first_relation.name + self.second_relation.name + "join", self.perform(), False)
+        super().__init__(self.first_relation.name + "_" + self.second_relation.name + "_join", self.perform(), False)
 
     def perform(self):
         """ Perform the join request to get the new schema """
@@ -24,6 +24,15 @@ class Join(Rel):
                 new_schema[attribute] = self.second_relation.database_schema[attribute]
 
         return new_schema
+
+    def execute(self, is_last_query = True):
+        """ Execute the request """
+        request = "SELECT *"
+        request += " FROM (" + self.first_relation.execute(False) + " NATURAL INNER JOIN " + self.second_relation.execute(False) + ")"
+
+        self.database.executeRequest(self.name, request)
+
+        return super().editTableExecute(is_last_query, True)
 
     def __str__(self):
         """ Transform the request into a string """

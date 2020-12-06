@@ -12,6 +12,7 @@ from comparison.Gt import *
 from comparison.Lt import *
 
 from system.SqlLiteDatabase import *
+from system.Displayer import *
 
 def testRelation(relation):
     print(f"[Request]  {relation}")
@@ -44,19 +45,26 @@ if __name__ == "__main__":
     # testRelation(diff)
 
     rel = Rel('countries')
+    rel1 = Rel('lands')
 
     select = Select(Eq('population', 65658520), rel)
 
-    rename = Rename('name', 'nom', select)
-    rename1 = Rename('population', 'populace', rename)
+    join = Join(rel1, select)
 
-    project = Project(['nom', 'populace'], rename1)
-
-    result = project.execute()
+    result = join.execute()
 
     db = SqlLiteDatabase('database.db', '')
     print(db.showTables())
-    print(result)
+
+    displayer = Displayer(join.database_schema, result)
+    displayer.show()
+
+    # select = Select(Eq('population', 65658520), rel)
+
+    # rename = Rename('name', 'nom', select)
+    # rename1 = Rename('population', 'populace', rename)
+
+    # project = Project(['nom', 'populace'], rename1)
 
     # project = Project(['name', 'country'], rel)
     # project1 = Project(['nom'], rename)
@@ -66,7 +74,7 @@ if __name__ == "__main__":
 
     # db = SqlLiteDatabase('database.db', '')
     # print(db.showTables())
-    # db.dropTable('countries_sel_proj')
+    # db.dropTable('countries_lands_join')
     # print(db.showTables())
 
     # print(db.showTables())

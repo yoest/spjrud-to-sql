@@ -36,10 +36,23 @@ class Rel:
         """ Execute the request """
         return self.name
 
-    def editTableExecute(self, is_last_query):
-        # Delete the previous table but not if it's the original relation
-        if not self.relation.is_final_relation:
-            self.database.dropTable(self.relation.name)
+    def editTableExecute(self, is_last_query, has_two_relation=False):
+        """ Remove the previous request table. 
+
+            If this is the last request ([is_last_query == True]), delete the current request table. 
+            If the request take two relations (join, union, ...), the attribute [has_two_relation] is set to True 
+        """
+
+        if has_two_relation:
+            # Delete the previous table but not if it's the original relation
+            if not self.first_relation.is_final_relation:
+                self.database.dropTable(self.first_relation.name)
+            if not self.second_relation.is_final_relation:
+                self.database.dropTable(self.second_relation.name)
+        else:
+            # Delete the previous table but not if it's the original relation
+            if not self.relation.is_final_relation:
+                self.database.dropTable(self.relation.name)
 
         # Get result table and delete the last table but only if it's the last recursive query
         if is_last_query:
