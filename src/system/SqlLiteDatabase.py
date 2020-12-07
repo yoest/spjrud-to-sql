@@ -129,3 +129,20 @@ class SqlLiteDatabase:
 
         connexion.commit()
         connexion.close()
+
+    def createExampleTableTwo(self):
+        """ Create two table for example """
+        connexion = sqlite3.connect(self.path)
+
+        # Table countries
+        connexion.execute("CREATE TABLE r (a INTEGER, b INTEGER, c INTEGER);")
+        connexion.execute("INSERT INTO r (a,b,c) VALUES(1,3,5);")
+        connexion.execute("INSERT INTO r (a,b,c) VALUES(1,4,5);")
+
+        # Table lands
+        connexion.execute("CREATE TABLE s (a INTEGER, b INTEGER, c INTEGER);")
+        connexion.execute("INSERT INTO s (a,b,c) VALUES(1,4,5);")
+        connexion.execute("INSERT INTO s (a,b,c) VALUES(2,3,6);")
+
+        connexion.commit()
+        connexion.close()

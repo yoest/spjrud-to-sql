@@ -13,7 +13,7 @@ class Diff(Rel):
         self.second_relation = second_relation
         
         # Perform the request
-        super().__init__(self.first_relation.name + self.second_relation.name + "diff", self.perform(), False)
+        super().__init__(self.first_relation.name + "_" + self.second_relation.name + "_diff", self.perform(), False)
 
     def perform(self):
         """ Perform the difference request to get the new schema """
@@ -32,6 +32,16 @@ class Diff(Rel):
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.first_relation}\nwhich is\n\t{self.first_relation.database_schema}\nis not the same as the schema of\n\t{self.second_relation}\nwhich is\n\t{self.second_relation.database_schema}"
 
             raise ValueError(error_request)
+
+    def execute(self, is_last_query = True):
+        """ Execute the request """
+        request = "SELECT * FROM " + self.first_relation.execute(False)
+        request += " EXCEPT "
+        request += "SELECT * FROM " + self.second_relation.execute(False)
+
+        self.database.executeRequest(self.name, request)
+
+        return super().editTableExecute(is_last_query, True)
 
     def __str__(self):
         """ Transform the request into a string """

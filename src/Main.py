@@ -44,25 +44,26 @@ if __name__ == "__main__":
     # diff = Diff(relations[0], relations[1])
     # testRelation(diff)
 
-    rel = Rel('countries')
-    rel1 = Rel('lands')
+    rel = Rel('r')
+    rel1 = Rel('s')
 
-    select = Select(Eq('population', 65658520), rel)
 
-    join = Join(rel1, select)
+    diff = Diff(rel, rel1)
 
-    result = join.execute()
+    result = diff.execute()
 
     db = SqlLiteDatabase('database.db', '')
     print(db.showTables())
 
-    displayer = Displayer(join.database_schema, result)
+    displayer = Displayer(diff.database_schema, result)
     displayer.show()
 
     # select = Select(Eq('population', 65658520), rel)
 
     # rename = Rename('name', 'nom', select)
     # rename1 = Rename('population', 'populace', rename)
+
+    # join = Join(rel1, select)
 
     # project = Project(['nom', 'populace'], rename1)
 
