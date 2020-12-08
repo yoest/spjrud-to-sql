@@ -14,11 +14,10 @@ class Rel:
         self.name = name
         self.is_final_relation = is_final_relation
 
-        self.database = SqlLiteDatabase('database.db', name)
+        self.database = SqlLiteDatabase('database.db')
 
         # Get the schema in a python dict or by the sql database
         if database_schema:
-            # self.database.checkDatabase(database_schema)
             self.database_schema = database_schema
         else:
             self.database_schema = self.perform()
@@ -26,7 +25,7 @@ class Rel:
 
     def perform(self):
         """ Get the database schema in the database """ 
-        return self.database.getSchema()
+        return self.database.getSchema(self.name)
 
     def checkRequest(self):
         """ Check some conditions so that the request is valid """
@@ -42,6 +41,9 @@ class Rel:
             If this is the last request ([is_last_query == True]), delete the current request table. 
             If the request take two relations (join, union, ...), the attribute [has_two_relation] is set to True 
         """
+
+        # Update the schema
+        self.database_schema = self.database.getSchema(self.name)
 
         if has_two_relation:
             # Delete the previous table but not if it's the original relation

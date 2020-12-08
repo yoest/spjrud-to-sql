@@ -48,8 +48,6 @@ class Rename(Rel):
         request += " TO " +  self.new_name
 
         self.database.executeRequest(self.name, request, self.relation.name)
-
-        print(self.database.getSchema())
         
         return super().editTableExecute(is_last_query)
 

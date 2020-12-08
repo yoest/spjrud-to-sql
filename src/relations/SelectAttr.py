@@ -1,7 +1,7 @@
 from relations.Rel import *
 
-class Select(Rel):
-    """ Represent a SELECT request (SPJRUD)
+class SelectAttr(Rel):
+    """ Represent a SELECT (attribute equal attribute) request (SPJRUD)
 
     Attributes:
         comparison  condition of selection (equality, ...)
@@ -20,9 +20,14 @@ class Select(Rel):
         return self.relation.database_schema
 
     def checkRequest(self):
-        """ The attribute to compared has to be in the relation """
+        """ Both attributes to compared has to be in the relation """
         if not self.comparison.name_attribute in self.relation.database_schema:
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.comparison.name_attribute}'"
+
+            raise ValueError(error_request)
+
+        if not self.comparison.value in self.relation.database_schema:
+            error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.comparison.value}'"
 
             raise ValueError(error_request)
 
@@ -30,7 +35,7 @@ class Select(Rel):
         """ Execute the request """
         request = "SELECT *"
         request += " FROM (" + self.relation.execute(False) + ")"
-        request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + "'" + str(self.comparison.value) + "'"
+        request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + str(self.comparison.value)
 
         self.database.executeRequest(self.name, request)
 
@@ -38,4 +43,4 @@ class Select(Rel):
 
     def __str__(self):
         """ Transform the request into a string """
-        return f"Select({self.comparison}, {self.relation})"
+        return f"SelectAttr({self.comparison}, {self.relation})"

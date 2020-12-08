@@ -5,24 +5,17 @@ class SqlLiteDatabase:
 
     Attributes:
         path        path of the .db file
-        rel_name    name of the relation linked to this database object
     """
-    def __init__(self, path, rel_name):
+    def __init__(self, path):
         self.path = path
-        self.rel_name = rel_name
-
-        # connexion = sqlite3.connect(self.path)
-        # connexion.execute("DROP TABLE " + self.rel_name + ";").fetchall()
-        # connexion.commit()
-        # connexion.close()
-
-    def getSchema(self):
+        
+    def getSchema(self, rel_name):
         """ Get the schema of the relation """
         result = {}
-        self.exist()
+        self.exist(rel_name)
 
         connexion = sqlite3.connect(self.path)
-        request = connexion.execute("PRAGMA table_info('" + self.rel_name + "')").fetchall()
+        request = connexion.execute("PRAGMA table_info('" + rel_name + "')").fetchall()
         
         # The form of the request is, for example :
         # [(0, 'name', 'TEXT', 0, None, 0), (1, 'devise', 'TEXT', 0, None, 0), (2, 'population', 'INTEGER', 0, None, 0)]
@@ -34,29 +27,16 @@ class SqlLiteDatabase:
 
         return result
 
-    def exist(self):
+    def exist(self, rel_name):
         """ Check if the table exist """
         connexion = sqlite3.connect(self.path)
 
         # check if the table already exist
-        exist = connexion.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='" + self.rel_name + "'").fetchone()
+        exist = connexion.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='" + rel_name + "'").fetchone()
 
         # if exist is 1, then the table exists
         if not exist[0] == 1 : 
-            raise Exception("Table '" + self.rel_name + "' doesn't exist.")
-
-        connexion.commit()
-        connexion.close()
-
-    def checkDatabase(self, database_schema):
-        """ Create a table with the database schema : [database_schema] """
-        self.exist()
-
-        connexion = sqlite3.connect(self.path)
-
-        # Not the same relation
-        if not (database_schema == self.getSchema()):
-            raise Exception("Table '" + self.rel_name + "' is not the same than the one in the database.")
+            raise Exception("Table '" + rel_name + "' doesn't exist.")
 
         connexion.commit()
         connexion.close()

@@ -1,6 +1,7 @@
 from relations.Rel import *
 from relations.Cst import *
-from relations.Select import *
+from relations.SelectCst import *
+from relations.SelectAttr import *
 from relations.Project import *
 from relations.Rename import *
 from relations.Join import *
@@ -14,64 +15,28 @@ from comparison.Lt import *
 from system.SqlLiteDatabase import *
 from system.Displayer import *
 
-def testRelation(relation):
-    print(f"[Request]  {relation}")
-    print(f"[Schema]  {relation.database_schema}")
-
 if __name__ == "__main__":
-    # relations = [
-    #     Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'INTEGER'}),
-    #     Rel('Countries', {'name':'TEXT', 'country':'TEXT', 'population':'INTEGER'}), 
-    #     Rel('Lands', {'name':'TEXT', 'capital':'TEXT', 'PIB':'INTEGER'})
-    # ]
 
-    # eq = Eq('name', 'mali')
-    # select = Select(eq, relations[0])
-    # testRelation(select)
-    
-    # rename = Rename('name', 'nom', relations[0])
-    # testRelation(rename)
+    request = {
+        #SelectCst(Eq('population', 65658520), Rel('countries')),
+        SelectAttr(Eq('name', 'nom'), Join(Rel('countries'), Rename('name', 'nom', Rel('lands')))),
+        #Rename('name', 'nom',  Rel('countries')),
+        #Project(['name', 'country'], Rel('countries')),
+        #Join(Rel('r'), Rel('s')),
+        #Union(Rel('r'), Rel('s')),
+        #Diff(Rel('r'), Rel('s'))
+    }
 
-    # join = Join(relations[0], relations[1])
-    # testRelation(join)
-
-    # union = Union(relations[0], relations[1])
-    # testRelation(union)
-
-    # project = Project(['name', 'population'], relations[0])
-    # testRelation(project)
-
-    # diff = Diff(relations[0], relations[1])
-    # testRelation(diff)
-
-    rel = Rel('r')
-    rel1 = Rel('s')
-
-
-    diff = Diff(rel, rel1)
-
-    result = diff.execute()
-
-    db = SqlLiteDatabase('database.db', '')
+    db = SqlLiteDatabase('database.db')
     print(db.showTables())
+    for request in request:
+        result = request.execute()
 
-    displayer = Displayer(diff.database_schema, result)
-    displayer.show()
+        print(db.showTables())
+        print(request)
 
-    # select = Select(Eq('population', 65658520), rel)
-
-    # rename = Rename('name', 'nom', select)
-    # rename1 = Rename('population', 'populace', rename)
-
-    # join = Join(rel1, select)
-
-    # project = Project(['nom', 'populace'], rename1)
-
-    # project = Project(['name', 'country'], rel)
-    # project1 = Project(['nom'], rename)
-
-    # project1.database.executeRequest(project1.execute())
-    #print(rel.database_schema)
+        displayer = Displayer(request.database_schema, result)
+        displayer.show()
 
     # db = SqlLiteDatabase('database.db', '')
     # print(db.showTables())
