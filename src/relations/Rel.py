@@ -14,7 +14,7 @@ class Rel:
         self.name = name
         self.is_final_relation = is_final_relation
 
-        self.database = SqlLiteDatabase('database.db')
+        self.database = SqlLiteDatabase.getInstance()
 
         # Get the schema in a python dict or by the sql database
         if database_schema:
@@ -58,9 +58,9 @@ class Rel:
 
         # Get result table and delete the last table but only if it's the last recursive query
         if is_last_query:
-            result = self.database.showTable(self.name)
+            result = self.database.getTable(self.name)
 
-            self.database.dropTable(self.name)
+            # self.database.dropTable(self.name)
             return result
         
         return self.name

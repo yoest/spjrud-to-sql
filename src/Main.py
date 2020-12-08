@@ -13,37 +13,32 @@ from comparison.Gt import *
 from comparison.Lt import *
 
 from system.SqlLiteDatabase import *
-from system.Displayer import *
 
 if __name__ == "__main__":
 
+    db = SqlLiteDatabase('database.db')
+
+    # db.reset()
+    # print(db.getTables())
+
     request = {
-        #SelectCst(Eq('population', 65658520), Rel('countries')),
+        SelectCst(Eq('population', 65658520), Rel('countries')),
         SelectAttr(Eq('name', 'nom'), Join(Rel('countries'), Rename('name', 'nom', Rel('lands')))),
-        #Rename('name', 'nom',  Rel('countries')),
-        #Project(['name', 'country'], Rel('countries')),
-        #Join(Rel('r'), Rel('s')),
-        #Union(Rel('r'), Rel('s')),
-        #Diff(Rel('r'), Rel('s'))
+        Rename('name', 'nom',  Rel('countries')),
+        Project(['name', 'country'], Rel('countries')),
+        Join(Rel('r'), Rel('s')),
+        Union(Rel('r'), Rel('s')),
+        Diff(Rel('r'), Rel('s'))
     }
 
-    db = SqlLiteDatabase('database.db')
-    print(db.showTables())
     for request in request:
-        result = request.execute()
-
-        print(db.showTables())
         print(request)
 
-        displayer = Displayer(request.database_schema, result)
-        displayer.show()
+        db.execute(request)
 
-    # db = SqlLiteDatabase('database.db', '')
-    # print(db.showTables())
-    # db.dropTable('countries_lands_join')
-    # print(db.showTables())
+    print(db.getTables())
+    db.rollback()
+    print(db.getTables())
 
-    # print(db.showTables())
-    # db.createExampleTable()
-    # print(db.showTables())
+    db.close()
     
