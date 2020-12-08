@@ -1,18 +1,4 @@
-from relations.Rel import *
-from relations.Cst import *
-from relations.SelectCst import *
-from relations.SelectAttr import *
-from relations.Project import *
-from relations.Rename import *
-from relations.Join import *
-from relations.Union import *
-from relations.Diff import *
-
-from comparison.Eq import *
-from comparison.Gt import *
-from comparison.Lt import *
-
-from system.SqlLiteDatabase import *
+from spjrud_converter import *
 
 if __name__ == "__main__":
 
@@ -38,7 +24,6 @@ if __name__ == "__main__":
 
     print(db.getTables())
     db.rollback()
-    print(db.getTables())
 
     db.close()
     
