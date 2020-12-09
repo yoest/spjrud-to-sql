@@ -21,7 +21,10 @@ class SqlLiteDatabase:
         self.connexion.execute("begin")
 
         # Design pattern Singleton
-        SqlLiteDatabase.instance = self
+        if SqlLiteDatabase.instance == None:
+            SqlLiteDatabase.instance = self
+        else:
+            raise Exception("There is already an opened database")
 
     @staticmethod 
     def getInstance():
@@ -52,14 +55,13 @@ class SqlLiteDatabase:
 
     def close(self):
         """ Close the connexion """
+        SqlLiteDatabase.instance = None
         self.connexion.close()
 
-    def reset(self):
+    def reset(self, initial_tables=[]):
         """ reset the database to its initial version """
-        initial_tables = ['countries', 'lands', 'r', 's']
-
         for table in self.getTables():
-            if not table[0] in initial_tables:
+            if (not initial_tables) or (not table[0] in initial_tables):
                 self.dropTable(table[0])
 
         self.connexion.commit()

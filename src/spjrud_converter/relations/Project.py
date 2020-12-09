@@ -36,7 +36,7 @@ class Project(Rel):
 
     def execute(self, is_last_query = True):
         """ Execute the request """
-        request = "SELECT "
+        request = "SELECT DISTINCT "
 
         for x, attribute in enumerate(self.list_attributes):
             request += attribute

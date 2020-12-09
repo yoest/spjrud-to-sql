@@ -13,7 +13,7 @@ class SelectCst(Rel):
         self.relation = relation
 
         # Perform the request
-        super().__init__(self.relation.name + "_sel", is_final_relation=False)
+        super().__init__(self.relation.name + "_selcst", is_final_relation=False)
 
     def perform(self):
         """ Perform the select request to get the schema """

@@ -13,7 +13,7 @@ class SelectAttr(Rel):
         self.relation = relation
 
         # Perform the request
-        super().__init__(self.relation.name + "_sel", is_final_relation=False)
+        super().__init__(self.relation.name + "_selatt", is_final_relation=False)
 
     def perform(self):
         """ Perform the select request to get the schema """
@@ -28,6 +28,12 @@ class SelectAttr(Rel):
 
         if not self.comparison.value in self.relation.database_schema:
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.comparison.value}'"
+
+            raise ValueError(error_request)
+
+        """ Attributes has to be of the same type """
+        if not (self.relation.database_schema[self.comparison.name_attribute] == self.relation.database_schema[self.comparison.value]):
+            error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nis not of the same type as this attribute :\n\t'{self.comparison.value}'"
 
             raise ValueError(error_request)
 
