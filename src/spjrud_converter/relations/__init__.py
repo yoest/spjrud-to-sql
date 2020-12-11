@@ -1,4 +1,3 @@
-from spjrud_converter.relations.Cst import Cst
 from spjrud_converter.relations.Diff import Diff
 from spjrud_converter.relations.Join import Join
 from spjrud_converter.relations.Project import Project

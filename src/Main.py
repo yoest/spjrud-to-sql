@@ -23,8 +23,6 @@ if __name__ == "__main__":
 
         db.execute(request)
 
-    print(db.getTables())
     db.rollback()
-
     db.close()
     

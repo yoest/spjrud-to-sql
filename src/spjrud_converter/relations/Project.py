@@ -38,14 +38,17 @@ class Project(Rel):
         """ Execute the request """
         request = "SELECT DISTINCT "
 
+        # Formating list of attriutes to get "name of attribute 1, name of attribute 2, ..."
         for x, attribute in enumerate(self.list_attributes):
             request += attribute
 
+            # Add a comma only if it's not the end of the list
             if(not (x == len(self.list_attributes) - 1)):
                 request += ", "
 
         request += " FROM (" + self.relation.execute(False) + ")"
 
+        # Create the table in the database
         self.database.executeRequest(self.name, request)
         
         return super().editTableExecute(is_last_query)

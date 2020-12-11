@@ -20,6 +20,7 @@ class Join(Rel):
         new_schema = self.first_relation.database_schema.copy()
 
         for attribute in self.second_relation.database_schema:
+            # Add new attributes of the second relation
             if not attribute in new_schema:
                 new_schema[attribute] = self.second_relation.database_schema[attribute]
 
@@ -27,9 +28,10 @@ class Join(Rel):
 
     def execute(self, is_last_query = True):
         """ Execute the request """
-        request = "SELECT *"
-        request += " FROM (" + self.first_relation.execute(False) + " NATURAL INNER JOIN " + self.second_relation.execute(False) + ")"
+        request = "SELECT * FROM (" + self.first_relation.execute(False)
+        request += " NATURAL INNER JOIN " + self.second_relation.execute(False) + ")"
 
+        # Create the table in the database
         self.database.executeRequest(self.name, request)
 
         return super().editTableExecute(is_last_query, True)

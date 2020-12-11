@@ -10,7 +10,9 @@ class Rel:
     """
 
     def __init__(self, name, database_schema = {}, is_final_relation = True):
+        # Check that the request is valid with this schema
         self.checkRequest()
+
         self.name = name
         self.is_final_relation = is_final_relation
 
@@ -38,32 +40,33 @@ class Rel:
     def editTableExecute(self, is_last_query, has_two_relation=False):
         """ Remove the previous request table. 
 
-            If this is the last request ([is_last_query == True]), delete the current request table. 
+            If this is the last request ([is_last_query == True]), return the table
+            Else, return the name of the request relation
+
             If the request take two relations (join, union, ...), the attribute [has_two_relation] is set to True 
         """
-
         # Update the schema
         self.database_schema = self.database.getSchema(self.name)
 
+        # Delete the previous table but not if it's the original relation
         if has_two_relation:
-            # Delete the previous table but not if it's the original relation
-            if not self.first_relation.is_final_relation:
-                self.database.dropTable(self.first_relation.name)
-            if not self.second_relation.is_final_relation:
-                self.database.dropTable(self.second_relation.name)
+            self.checkDropping(self.first_relation)
+            self.checkDropping(self.second_relation)
         else:
-            # Delete the previous table but not if it's the original relation
-            if not self.relation.is_final_relation:
-                self.database.dropTable(self.relation.name)
+            self.checkDropping(self.relation)
 
-        # Get result table and delete the last table but only if it's the last recursive query
+        # Get result table but only if it's the last recursive query
         if is_last_query:
-            result = self.database.getTable(self.name)
-
-            # self.database.dropTable(self.name)
-            return result
+            return self.database.getTable(self.name)
         
         return self.name
+
+    def checkDropping(self, specific_relation):
+        """ Drop a table only if this is not the original relation
+            [specific_relation] is the name of the table
+        """
+        if not specific_relation.is_final_relation:
+            self.database.dropTable(specific_relation.name)
 
     def __str__(self):
         """ Transform the request into a string """

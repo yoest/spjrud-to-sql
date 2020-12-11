@@ -39,6 +39,7 @@ class Union(Rel):
         request += " UNION "
         request += "SELECT * FROM " + self.second_relation.execute(False)
 
+        # Create the table in the database
         self.database.executeRequest(self.name, request)
 
         return super().editTableExecute(is_last_query, True)

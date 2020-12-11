@@ -32,6 +32,7 @@ class SelectCst(Rel):
         request += " FROM (" + self.relation.execute(False) + ")"
         request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + "'" + str(self.comparison.value) + "'"
 
+        # Create the table in the database
         self.database.executeRequest(self.name, request)
 
         return super().editTableExecute(is_last_query)

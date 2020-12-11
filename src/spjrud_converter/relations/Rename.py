@@ -26,8 +26,8 @@ class Rename(Rel):
         return new_schema
 
     def checkRequest(self):
-        """ The attribute to compared has to be in the relation and that there 
-            is not another attributes with this name 
+        """ The attribute to compared has to be in the relation and 
+            there must be no other attributes with this name in the relation
         """
         if not self.attribute in self.relation.database_schema:
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.attribute}'"
@@ -47,6 +47,7 @@ class Rename(Rel):
         request += " RENAME COLUMN " +  self.attribute
         request += " TO " +  self.new_name
 
+        # Create the table in the database
         self.database.executeRequest(self.name, request, self.relation.name)
         
         return super().editTableExecute(is_last_query)

@@ -21,15 +21,8 @@ class SelectAttr(Rel):
 
     def checkRequest(self):
         """ Both attributes to compared has to be in the relation """
-        if not self.comparison.name_attribute in self.relation.database_schema:
-            error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.comparison.name_attribute}'"
-
-            raise ValueError(error_request)
-
-        if not self.comparison.value in self.relation.database_schema:
-            error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.comparison.value}'"
-
-            raise ValueError(error_request)
+        self.checkAttributes(self.comparison.name_attribute)
+        self.checkAttributes(self.comparison.value)
 
         """ Attributes has to be of the same type """
         if not (self.relation.database_schema[self.comparison.name_attribute] == self.relation.database_schema[self.comparison.value]):
@@ -37,12 +30,20 @@ class SelectAttr(Rel):
 
             raise ValueError(error_request)
 
+    def checkAttributes(self, specific_attribute):
+        """ Check that the [specific_attribute] is in the current relation """
+        if not specific_attribute in self.relation.database_schema:
+            error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{specific_attribute}'"
+
+            raise ValueError(error_request)
+
     def execute(self, is_last_query = True):
         """ Execute the request """
         request = "SELECT *"
         request += " FROM (" + self.relation.execute(False) + ")"
-        request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + str(self.comparison.value)
+        request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + self.comparison.value
 
+        # Create the table in the database
         self.database.executeRequest(self.name, request)
 
         return super().editTableExecute(is_last_query)

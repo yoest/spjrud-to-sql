@@ -20,7 +20,7 @@ class Diff(Rel):
         return self.first_relation.database_schema
 
     def checkRequest(self):
-        """ Both relations has to have the same attributes """
+        """ Both relations have to have the same attributes """
         hasSameAttributes = True
         for attribute in self.first_relation.database_schema:
             if not attribute in self.second_relation.database_schema:
@@ -39,6 +39,7 @@ class Diff(Rel):
         request += " EXCEPT "
         request += "SELECT * FROM " + self.second_relation.execute(False)
 
+        # Create the table in the database
         self.database.executeRequest(self.name, request)
 
         return super().editTableExecute(is_last_query, True)

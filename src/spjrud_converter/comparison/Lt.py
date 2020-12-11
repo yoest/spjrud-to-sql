@@ -1,7 +1,7 @@
 from spjrud_converter.comparison.Eq import Eq
 
 class Lt(Eq):
-    """ Represents a less than operation between an attribute and a value
+    """ Represents a "less than" operation between an attribute and a value
 
     Attributes:
         name_attribute      name of the attribute to compared with the value

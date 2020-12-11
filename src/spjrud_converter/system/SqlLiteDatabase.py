@@ -6,19 +6,17 @@ class SqlLiteDatabase:
     """ This class manage the sql database 
 
     Attributes:
-        path        path of the .db file
+        path            path of the .db file
+        keep_changes    keep the changes in the database ?
     """
     instance = None
 
     def __init__(self, path):
         self.path = path
 
-        # Open a connexion to the database
+        # Open a connexion to the database and save the current state
         self.connexion = sqlite3.connect(self.path)
-
-        # Desactivate the auto-commit mode
-        self.connexion.isolation_level = None
-        self.connexion.execute("begin")
+        self.saveState()
 
         # Design pattern Singleton
         if SqlLiteDatabase.instance == None:
@@ -28,12 +26,19 @@ class SqlLiteDatabase:
 
     @staticmethod 
     def getInstance():
-        """ Static access method. """
+        """ Design pattern Singleton : access with static method """
         if SqlLiteDatabase.instance == None:
             raise Exception("You have to create a SqlLiteDatabase before using request")
 
         return SqlLiteDatabase.instance
 
+    def saveState(self):
+        """ Save the current state of the database """
+        # Transform the list of tuple in a simple list of string
+        self.initial_state = []
+        for table in self.getTables():
+            self.initial_state.append(table[0])
+            
     def execute(self, spjrud_request):
         """ Execute the [spjrud_request] and show the result """
         result = spjrud_request.execute()
@@ -44,12 +49,17 @@ class SqlLiteDatabase:
     def commit(self):
         """ Commit the change into the database """
         self.connexion.commit()
+
         print("[Changes commit to the database]")
         print("-- [Current database " + str(self.getTables()) + "]")
 
     def rollback(self):
         """ Rollback the change into the database """
-        self.connexion.rollback()
+        # We cannot use 'rollback()' of sqlite because there is a bug
+        # with the library when you start a transaction in multiple methods
+        self.reset(self.initial_state)
+        self.connexion.commit()
+
         print("[Changes rollback from the database]")
         print("-- [Current database " + str(self.getTables()) + "]")
 
@@ -60,6 +70,9 @@ class SqlLiteDatabase:
 
     def reset(self, initial_tables=[]):
         """ reset the database to its initial version """
+        # Save the new state
+        self.initial_state = initial_tables
+
         for table in self.getTables():
             if (not initial_tables) or (not table[0] in initial_tables):
                 self.dropTable(table[0])
@@ -107,42 +120,38 @@ class SqlLiteDatabase:
 
     def getTables(self):
         """ Show names of tables in the database """
-        result = self.connexion.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
-
-        return result
+        result = self.connexion.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        return result.fetchall()
 
     def getTable(self, table_name):
         """ Show one specific table """
-        result = self.connexion.execute("SELECT * FROM " + table_name + ";").fetchall()
-
-        return result
+        result = self.connexion.execute("SELECT * FROM " + table_name + ";")
+        return result.fetchall()
 
     def dropTable(self, table_name):
         """ Drop the table named [table_name] """
         self.connexion.execute("DROP table IF EXISTS " + table_name + ";")
 
     def createExampleTable(self):
-        """ Create two table for example """
-        # Table countries
+        """ Create tables for example """
+        # Table 'countries'
         self.connexion.execute("CREATE TABLE countries (name TEXT, country TEXT, population INTEGER);")
         self.connexion.execute("INSERT INTO countries (name,country,population) VALUES('mons','belgium',50000);")
         self.connexion.execute("INSERT INTO countries (name,country,population) VALUES('new york','usa',65658520);")
         self.connexion.execute("INSERT INTO countries (name,country,population) VALUES('madrid','spain',266465);")
 
-        # Table lands
+        # Table 'lands'
         self.connexion.execute("CREATE TABLE lands (name TEXT, country TEXT, money INTEGER);")
         self.connexion.execute("INSERT INTO lands (name,country,money) VALUES('mons','belgium',456192346);")
         self.connexion.execute("INSERT INTO lands (name,country,money) VALUES('new york','usa',451349294613);")
         self.connexion.execute("INSERT INTO lands (name,country,money) VALUES('madrid','spain',23164982846);")
 
-    def createExampleTableTwo(self):
-        """ Create two table for example """
-        # Table countries
+        # Table 'r'
         self.connexion.execute("CREATE TABLE r (a INTEGER, b INTEGER, c INTEGER);")
         self.connexion.execute("INSERT INTO r (a,b,c) VALUES(1,3,5);")
         self.connexion.execute("INSERT INTO r (a,b,c) VALUES(1,4,5);")
 
-        # Table lands
+        # Table 's'
         self.connexion.execute("CREATE TABLE s (a INTEGER, b INTEGER, c INTEGER);")
         self.connexion.execute("INSERT INTO s (a,b,c) VALUES(1,4,5);")
         self.connexion.execute("INSERT INTO s (a,b,c) VALUES(2,3,6);")
