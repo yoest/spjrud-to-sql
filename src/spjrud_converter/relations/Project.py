@@ -26,7 +26,7 @@ class Project(Rel):
 
         return new_schema
 
-    def checkRequest(self):
+    def check_request(self):
         """ all attributes to compared has to be in the relation """
         for attribute in self.list_attributes:
             if not attribute in self.relation.database_schema:
@@ -43,15 +43,15 @@ class Project(Rel):
             request += attribute
 
             # Add a comma only if it's not the end of the list
-            if(not (x == len(self.list_attributes) - 1)):
+            if not (x == len(self.list_attributes) - 1):
                 request += ", "
 
         request += " FROM (" + self.relation.execute(False) + ")"
 
         # Create the table in the database
-        self.database.executeRequest(self.name, request)
+        self.database.execute_request(self.name, request)
         
-        return super().editTableExecute(is_last_query)
+        return super().edit_table_execute(is_last_query)
 
     def __str__(self):
         """ Transform the request into a string """

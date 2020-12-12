@@ -25,7 +25,7 @@ class Rename(Rel):
 
         return new_schema
 
-    def checkRequest(self):
+    def check_request(self):
         """ The attribute to compared has to be in the relation and 
             there must be no other attributes with this name in the relation
         """
@@ -48,9 +48,9 @@ class Rename(Rel):
         request += " TO " +  self.new_name
 
         # Create the table in the database
-        self.database.executeRequest(self.name, request, self.relation.name)
+        self.database.execute_request(self.name, request, self.relation.name)
         
-        return super().editTableExecute(is_last_query)
+        return super().edit_table_execute(is_last_query)
 
     def __str__(self):
         """ Transform the request into a string """

@@ -5,7 +5,7 @@ if __name__ == "__main__":
     db = SqlLiteDatabase('database.db')
 
     db.reset(['countries', 'lands', 'r', 's'])
-    print(db.getTables())
+    print(db.get_tables())
 
     request = {
         SelectCst(Eq('population', 65658520), Rel('countries')),

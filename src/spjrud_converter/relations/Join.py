@@ -32,9 +32,9 @@ class Join(Rel):
         request += " NATURAL INNER JOIN " + self.second_relation.execute(False) + ")"
 
         # Create the table in the database
-        self.database.executeRequest(self.name, request)
+        self.database.execute_request(self.name, request)
 
-        return super().editTableExecute(is_last_query, True)
+        return super().edit_table_execute(is_last_query, True)
 
     def __str__(self):
         """ Transform the request into a string """

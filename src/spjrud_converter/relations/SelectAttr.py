@@ -19,10 +19,10 @@ class SelectAttr(Rel):
         """ Perform the select request to get the schema """
         return self.relation.database_schema
 
-    def checkRequest(self):
+    def check_request(self):
         """ Both attributes to compared has to be in the relation """
-        self.checkAttributes(self.comparison.name_attribute)
-        self.checkAttributes(self.comparison.value)
+        self.check_attributes(self.comparison.name_attribute)
+        self.check_attributes(self.comparison.value)
 
         """ Attributes has to be of the same type """
         if not (self.relation.database_schema[self.comparison.name_attribute] == self.relation.database_schema[self.comparison.value]):
@@ -30,7 +30,7 @@ class SelectAttr(Rel):
 
             raise ValueError(error_request)
 
-    def checkAttributes(self, specific_attribute):
+    def check_attributes(self, specific_attribute):
         """ Check that the [specific_attribute] is in the current relation """
         if not specific_attribute in self.relation.database_schema:
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{specific_attribute}'"
@@ -44,9 +44,9 @@ class SelectAttr(Rel):
         request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + self.comparison.value
 
         # Create the table in the database
-        self.database.executeRequest(self.name, request)
+        self.database.execute_request(self.name, request)
 
-        return super().editTableExecute(is_last_query)
+        return super().edit_table_execute(is_last_query)
 
     def __str__(self):
         """ Transform the request into a string """

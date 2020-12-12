@@ -16,7 +16,7 @@ class SqlLiteDatabase:
 
         # Open a connexion to the database and save the current state
         self.connexion = sqlite3.connect(self.path)
-        self.saveState()
+        self.save_state()
 
         # Design pattern Singleton
         if SqlLiteDatabase.instance == None:
@@ -25,18 +25,18 @@ class SqlLiteDatabase:
             raise Exception("There is already an opened database")
 
     @staticmethod 
-    def getInstance():
+    def get_instance():
         """ Design pattern Singleton : access with static method """
         if SqlLiteDatabase.instance == None:
             raise Exception("You have to create a SqlLiteDatabase before using request")
 
         return SqlLiteDatabase.instance
 
-    def saveState(self):
+    def save_state(self):
         """ Save the current state of the database """
         # Transform the list of tuple in a simple list of string
         self.initial_state = []
-        for table in self.getTables():
+        for table in self.get_tables():
             self.initial_state.append(table[0])
             
     def execute(self, spjrud_request):
@@ -48,10 +48,11 @@ class SqlLiteDatabase:
 
     def commit(self):
         """ Commit the change into the database """
+        self.save_state()
         self.connexion.commit()
 
         print("[Changes commit to the database]")
-        print("-- [Current database " + str(self.getTables()) + "]")
+        print("-- [Current database " + str(self.get_tables()) + "]")
 
     def rollback(self):
         """ Rollback the change into the database """
@@ -61,7 +62,7 @@ class SqlLiteDatabase:
         self.connexion.commit()
 
         print("[Changes rollback from the database]")
-        print("-- [Current database " + str(self.getTables()) + "]")
+        print("-- [Current database " + str(self.get_tables()) + "]")
 
     def close(self):
         """ Close the connexion """
@@ -73,13 +74,13 @@ class SqlLiteDatabase:
         # Save the new state
         self.initial_state = initial_tables
 
-        for table in self.getTables():
+        for table in self.get_tables():
             if (not initial_tables) or (not table[0] in initial_tables):
-                self.dropTable(table[0])
+                self.drop_table(table[0])
 
         self.connexion.commit()
         
-    def getSchema(self, rel_name):
+    def get_schema(self, rel_name):
         """ Get the schema of the relation """
         result = {}
         self.exist(rel_name)
@@ -101,7 +102,7 @@ class SqlLiteDatabase:
         if not exist[0] == 1 : 
             raise Exception("Table '" + rel_name + "' doesn't exist.")
 
-    def executeRequest(self, table_name, request, old_name=""):
+    def execute_request(self, table_name, request, old_name=""):
         """ execute the [request] which create a table named [table_name].
 
             [old] contains the name of the table on which we execute the request
@@ -109,30 +110,30 @@ class SqlLiteDatabase:
         """
 
         # Create a new table from the request
-        # We don't use only the request because the query 'RENAME' create obligatorily
-        # a new table, and so we have to create a table for each request to make the
-        # algorithm recursive
+        # We don't use only the request because the query 'RENAME' has to be execute
+        # on a new table, and so we have to create a table for each request to make
+        # the algorithm recursive
         if not old_name:
             self.connexion.execute("CREATE TABLE " + table_name + " AS " + request)
         else:
             self.connexion.execute("CREATE TABLE " + table_name + " AS SELECT * FROM " + old_name + ";")
             self.connexion.execute(request)
 
-    def getTables(self):
+    def get_tables(self):
         """ Show names of tables in the database """
         result = self.connexion.execute("SELECT name FROM sqlite_master WHERE type='table';")
         return result.fetchall()
 
-    def getTable(self, table_name):
+    def get_table(self, table_name):
         """ Show one specific table """
         result = self.connexion.execute("SELECT * FROM " + table_name + ";")
         return result.fetchall()
 
-    def dropTable(self, table_name):
+    def drop_table(self, table_name):
         """ Drop the table named [table_name] """
         self.connexion.execute("DROP table IF EXISTS " + table_name + ";")
 
-    def createExampleTable(self):
+    def create_example_table(self):
         """ Create tables for example """
         # Table 'countries'
         self.connexion.execute("CREATE TABLE countries (name TEXT, country TEXT, population INTEGER);")

@@ -19,16 +19,16 @@ class Diff(Rel):
         """ Perform the difference request to get the new schema """
         return self.first_relation.database_schema
 
-    def checkRequest(self):
+    def check_request(self):
         """ Both relations have to have the same attributes """
-        hasSameAttributes = True
+        has_same_attributes = True
         for attribute in self.first_relation.database_schema:
             if not attribute in self.second_relation.database_schema:
-                hasSameAttributes = False
+                has_same_attributes = False
 
-        hasSameSize = len(self.first_relation.database_schema) == len(self.second_relation.database_schema)
+        has_same_size = len(self.first_relation.database_schema) == len(self.second_relation.database_schema)
 
-        if not hasSameAttributes or not hasSameSize:
+        if not has_same_attributes or not has_same_size:
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.first_relation}\nwhich is\n\t{self.first_relation.database_schema}\nis not the same as the schema of\n\t{self.second_relation}\nwhich is\n\t{self.second_relation.database_schema}"
 
             raise ValueError(error_request)
@@ -40,9 +40,9 @@ class Diff(Rel):
         request += "SELECT * FROM " + self.second_relation.execute(False)
 
         # Create the table in the database
-        self.database.executeRequest(self.name, request)
+        self.database.execute_request(self.name, request)
 
-        return super().editTableExecute(is_last_query, True)
+        return super().edit_table_execute(is_last_query, True)
 
     def __str__(self):
         """ Transform the request into a string """

@@ -19,7 +19,7 @@ class SelectCst(Rel):
         """ Perform the select request to get the schema """
         return self.relation.database_schema
 
-    def checkRequest(self):
+    def check_request(self):
         """ The attribute to compared has to be in the relation """
         if not self.comparison.name_attribute in self.relation.database_schema:
             error_request = f"\n\nInvalid expression.\nThe (sub-)expression\n\t{self}\nis invalid because the schema of\n\t{self.relation}\nwhich is\n\t{self.relation.database_schema}\nhas no attribute :\n\t'{self.comparison.name_attribute}'"
@@ -33,9 +33,9 @@ class SelectCst(Rel):
         request += " WHERE " + self.comparison.name_attribute + self.comparison.operator + "'" + str(self.comparison.value) + "'"
 
         # Create the table in the database
-        self.database.executeRequest(self.name, request)
+        self.database.execute_request(self.name, request)
 
-        return super().editTableExecute(is_last_query)
+        return super().edit_table_execute(is_last_query)
 
     def __str__(self):
         """ Transform the request into a string """
