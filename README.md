@@ -65,7 +65,11 @@ Cette architecture a été utilisée après avoir rencontré un problème au cou
 
 ## Fonctionnalités supplémentaires
 
-Coming soon...
+Pour pouvoir tester les différentes requêtes, la classe "Main" contient deux fonctions :
+
+- La fonction 'test' permet de tester différents cas d'utilisation. Le programme demande à l'utilisateur de choisir parmi plusieurs requêtes. Ce test se base sur la base de données de la question 6 dans le syllabus, et contient également la requête corrigée à la question 23.
+
+- La fonction 'manual' permet à l'utilisateur de tester manuellement des requêtes. Il suffit d'écrire la requête à l'endroit défini dans le code. Bien évidemment, n'importe quelles autres méthodes de la librairie peut aussi être utilisée (voir section "Documentation").
 
 ## Difficultés rencontrées/Solutions apportées
 
@@ -118,6 +122,12 @@ Cette méthode, inversément à la méthode "commit()" ci dessus, permet d'enlev
 > db.close()
 
 Cette méthode met fin à la connexion avec la base de données.
+
+---
+
+> db.rename(nom_table, nouveau_nom_table)
+
+Cette méthode renomme la table nommé "nom_table".
 
 ---
 

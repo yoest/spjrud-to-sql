@@ -8,12 +8,20 @@ class Rel:
         database_schema     schema of the relation (Ex : {'name':TEXT, 'population':NUMERIC})
         is_final_relation   always True in case of the initial relation (not if queries)
     """
+    # Allow to have many request of the same type
+    nbr_request = 0
 
     def __init__(self, name, database_schema = {}, is_final_relation = True):
         # Check that the request is valid with this schema
         self.check_request()
 
-        self.name = name
+        # Allow to have many request of the same type
+        if not is_final_relation:
+            self.name = name + "_" + str(Rel.nbr_request)
+            Rel.nbr_request += 1
+        else:
+            self.name = name
+
         self.is_final_relation = is_final_relation
 
         self.database = SqlLiteDatabase.get_instance()

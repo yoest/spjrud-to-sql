@@ -79,6 +79,10 @@ class SqlLiteDatabase:
                 self.drop_table(table[0])
 
         self.connexion.commit()
+
+    def rename(self, table_name, new_table_name):
+        """ Rename a table from [table_name] to [new_table_name] """
+        self.connexion.execute("ALTER TABLE " + table_name + " RENAME TO " + new_table_name + ";")
         
     def get_schema(self, rel_name):
         """ Get the schema of the relation """
@@ -135,24 +139,20 @@ class SqlLiteDatabase:
 
     def create_example_table(self):
         """ Create tables for example """
-        # Table 'countries'
-        self.connexion.execute("CREATE TABLE countries (name TEXT, country TEXT, population INTEGER);")
-        self.connexion.execute("INSERT INTO countries (name,country,population) VALUES('mons','belgium',50000);")
-        self.connexion.execute("INSERT INTO countries (name,country,population) VALUES('new york','usa',65658520);")
-        self.connexion.execute("INSERT INTO countries (name,country,population) VALUES('madrid','spain',266465);")
+        # Table 'employe'
+        self.connexion.execute("CREATE TABLE employe (NrEmp TEXT, Dept TEXT, Pourcent INTEGER);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E1','Info',40);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E1','Bio',60);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E2','Eco',100);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E3','Bio',50);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E3','Eco',50);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E4','Eco',100);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E5','Eco',50);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E5','Bio',25);")
+        self.connexion.execute("INSERT INTO employe (NrEmp,Dept,Pourcent) VALUES('E5','Info',25);")
 
-        # Table 'lands'
-        self.connexion.execute("CREATE TABLE lands (name TEXT, country TEXT, money INTEGER);")
-        self.connexion.execute("INSERT INTO lands (name,country,money) VALUES('mons','belgium',456192346);")
-        self.connexion.execute("INSERT INTO lands (name,country,money) VALUES('new york','usa',451349294613);")
-        self.connexion.execute("INSERT INTO lands (name,country,money) VALUES('madrid','spain',23164982846);")
-
-        # Table 'r'
-        self.connexion.execute("CREATE TABLE r (a INTEGER, b INTEGER, c INTEGER);")
-        self.connexion.execute("INSERT INTO r (a,b,c) VALUES(1,3,5);")
-        self.connexion.execute("INSERT INTO r (a,b,c) VALUES(1,4,5);")
-
-        # Table 's'
-        self.connexion.execute("CREATE TABLE s (a INTEGER, b INTEGER, c INTEGER);")
-        self.connexion.execute("INSERT INTO s (a,b,c) VALUES(1,4,5);")
-        self.connexion.execute("INSERT INTO s (a,b,c) VALUES(2,3,6);")
+        # Table 'departement'
+        self.connexion.execute("CREATE TABLE departement (NomDept TEXT, Budget INTEGER, Chef TEXT);")
+        self.connexion.execute("INSERT INTO departement (NomDept,Budget,Chef) VALUES('Info',5000,'E1');")
+        self.connexion.execute("INSERT INTO departement (NomDept,Budget,Chef) VALUES('Bio',3500,'E1');")
+        self.connexion.execute("INSERT INTO departement (NomDept,Budget,Chef) VALUES('Eco',4000,'E5');")
