@@ -83,95 +83,127 @@ En effet, la requéte "rename" en SQL s'effectue sur une table de la base de don
 
 Pour pouvoir utiliser ce module, il faut d'abord l'importer :
 
-> from spjrud_converter import *
+```Python
+from spjrud_converter import *
+```
 
 Comme les requêtes doivent être executées sur une base de données SQLite, il faut ensuite créer un objet 'SqlLiteDatabase' qui prend en paramètre le nom de la base de données (le chemin du fichier .db)
 
-> db = SqlLiteDatabase('database.db')
+```Python
+db = SqlLiteDatabase('database.db')
+```
 
 Remarque : une seul objet 'SqlLiteDatabase' peut être actif à la fois (voir la section "Choix d'implémentation" pour la justification de ce choix).
 
 ### Objet 'SqlLiteDatabase'
 
-> db.reset()
+```Python
+db.reset()
+```
 
 Cette méthode permet d'effacer toutes les tables de la base de données.
 
 Celle-ci peut également prendre une liste en paramètres permettant de spécifier les tables de la base de données à conserver.
 
-> db.reset(['countries', 'lands', 'r', 's'])
+```Python
+db.reset(['countries', 'lands', 'r', 's'])
+```
 
 ---
 
-> db.execute()
+```Python
+db.execute()
+```
 
 Cette méthode permet d'executer une requête SPJRUD passée en paramètres (voir la section suivante pour les différentes requêtes). Elle affiche également le résultat de la requête dans la console.
 
 ---
 
-> db.commit()
+```Python
+db.commit()
+```
 
 Cette méthode permet de garder les changements en base de données.
 
-> db.rollback()
+```Python
+db.rollback()
+```
 
 Cette méthode, inversément à la méthode "commit()" ci dessus, permet d'enlever les changements en base de données depuis le dernier commit.
 
 ---
 
-> db.close()
+```Python
+db.close()
+```
 
 Cette méthode met fin à la connexion avec la base de données.
 
 ---
 
-> db.rename(nom_table, nouveau_nom_table)
+```Python
+db.rename(nom_table, nouveau_nom_table)
+```
 
 Cette méthode renomme la table nommé "nom_table".
 
 ---
 
-> db.getTables()
+```Python
+db.getTables()
+```
 
 Cette méthode retourne toutes les tables contenues en base de données.
 
 ---
 
-> db.getTable(table_name)
+```Python
+db.getTable(table_name)
+```
 
 Cette méthode retourne toutes les données contenues dans une table de la base de données. Le paramètres 'table_name' représente le nom de la table dans la base de données.
 
 ### Requêtes SPJRUD
 
-> Rel(nom, {schema_relation})
+```Python
+Rel(nom, {schema_relation})
+```
 
 - nom : nom de la table en base de données
 - schema_relation (optionnel) : schéma de la relation. Si ce paramètres n'est pas spécifié, alors le schéma correspond au schéma de la table en base de données.
 
 ---
 
-> SelectCst(comparaison, relation)
+```Python
+SelectCst(comparaison, relation)
+```
 
 - comparaison : condition de sélection (égalité, inégalité, ...)
 - relation : la relation sur laquelle effectué la selection "attribut égal constante"
 
 ---
 
-> SelectAttr(comparaison, relation)
+```Python
+SelectAttr(comparaison, relation)
+```
 
 - comparaison : condition de sélection (égalité, inégalité, ...)
 - relation : la relation sur laquelle effectué la selection "attribut égal attribut"
 
 ---
 
-> Project(liste_attributs, relation)
+```Python
+Project(liste_attributs, relation)
+```
 
 - liste_attributs : tous les attributs que l'on veut récupérer avec la sélection
 - relation : la relation sur laquelle effectué la projection
 
 ---
 
-> Rename(attribut, nouveau_nom, relation)
+```Python
+Rename(attribut, nouveau_nom, relation)
+```
 
 - attribut : l'attribut à renommer
 - nouveau_nom : le nouveau nom à donner à l'attribut
@@ -179,21 +211,27 @@ Cette méthode retourne toutes les données contenues dans une table de la base 
 
 ---
 
-> Join(relation_1, relation_2)
+```Python
+Join(relation_1, relation_2)
+```
 
 - relation_1 : la première relation sur laquelle effectué la jointure
 - relation_2 : la seconde relation sur laquelle effectué la jointure
 
 ---
 
-> Union(relation_1, relation_2)
+```Python
+Union(relation_1, relation_2)
+```
 
 - relation_1 : la première relation sur laquelle effectué la jointure
 - relation_2 : la seconde relation sur laquelle effectué la jointure
 
 ---
 
-> Diff(relation_1, relation_2)
+```Python
+Diff(relation_1, relation_2)
+```
 
 - relation_1 : la première relation sur laquelle effectué la jointure
 - relation_2 : la seconde relation sur laquelle effectué la jointure
