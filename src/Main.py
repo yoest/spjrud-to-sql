@@ -35,9 +35,9 @@ def test():
     print(f"\nLa requête executée est : {requests[user_response]}")
     db.execute(requests[user_response])
 
-    # Renamme result table and show the table in the database
+    # Renamme result table (and show the table in the database)
     db.rename(requests[user_response].name, 'result')
-    print(db.get_tables())
+    # print(db.get_tables())
 
     db.rollback()
     db.close()
